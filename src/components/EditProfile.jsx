@@ -27,7 +27,7 @@ const EditProfile = ({ user }) => {
         { withCredentials: true }
       );
       dispatch(addUser(res?.data?.data));
-      console.log("data is updated");
+    
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);

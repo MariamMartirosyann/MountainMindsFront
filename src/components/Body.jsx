@@ -35,9 +35,11 @@ function Body() {
   }, []);
 
   return (
-    <div data-theme="dark">
+    <div data-theme="dark" className="">
       <Navbar />
+      <div className="min-h-[80%]">
       <Outlet />
+      </div>
       <Footer />
     </div>
   );

@@ -12,7 +12,7 @@ const Connections = () => {
       const response = await axios.get(BASE_URL + "/user/connections", {
         withCredentials: true,
       });
-      console.log(response?.data?.data);
+
       dispatch(addConnections(response?.data?.data));
     } catch (err) {
       console.error(err);
@@ -25,7 +25,11 @@ const Connections = () => {
 
   if (!connections) return;
   if (connections.length === 0)
-    return <h1 className="font-bold text-2xl">No connections found</h1>;
+    return (
+      <div className="text-center my-10 h-full w-1/2 mx-auto">
+        <h1 className="font-bold text-2xl">No connections found</h1>
+      </div>
+    );
 
   return (
     <div className="text-center my-10 h-full w-1/2 mx-auto">
@@ -38,20 +42,20 @@ const Connections = () => {
             key={photoURL}
             className="flex flex-row  m-4 p-4  rounded-lg bg-base-300 "
           >
-            <div>
+            <div className="">
               {" "}
-              <img
+              <img 
                 src={photoURL}
                 alt="user"
                 className="w-20 h-20 rounded-full my-2"
               />
             </div>
-            <div className="text-left m-6"> 
+            <div className="text-left m-6 w-[70%] ">
               {" "}
               <h2 className="font-bold text-xl">
                 {firstName + " " + lastName}
               </h2>
-              {age && gender && ( <p>{age + ", " + gender}</p>)}
+              {age && gender && <p>{age + ", " + gender}</p>}
               <p className="">{about}</p>
             </div>
           </div>

@@ -7,7 +7,7 @@ import { BASE_URL } from "../utils/constants";
 const Requests = () => {
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.request);
-  console.log(requests, "requests from the store");
+ 
 
   const fetchRequests = async () => {
     try {
@@ -51,7 +51,7 @@ const Requests = () => {
             key={_id}
             className="flex flex-row  m-4 p-4  rounded-lg bg-base-300  justify-between"
           >
-            <div>
+            <div className="">
               {" "}
               <img
                 src={photoURL}
@@ -59,7 +59,7 @@ const Requests = () => {
                 className="w-20 h-20 rounded-full my-2"
               />
             </div>
-            <div className="text-left m-6">
+            <div className="text-left m-6 w-[60%]">
               {" "}
               <h2 className="font-bold text-xl">
                 {firstName + " " + lastName}
@@ -67,7 +67,7 @@ const Requests = () => {
               {age && gender && <p>{age + ", " + gender}</p>}
               <p className="">{about}</p>
             </div>
-            <div className="flex flex-row justify-end items-center">
+            <div className="flex flex-row justify-end items-center ">
               <button className="btn btn-primary mx-2" onClick={() => reviewRequest("rejected",request._id)}>Reject</button>
               <button className="btn btn-secondary mx-2" onClick={() => reviewRequest("accepted",request._id)}>Accept</button>
             </div>
