@@ -5,29 +5,40 @@ import { Link } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
+import MountaunMind from "../images/MM.jpeg";
 
+const navLinks = [
+  { name: "Profile", path: "/profile" },
+  { name: "Connections", path: "/connections" },
+  { name: "Requests", path: "/requests" },
+];
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
-  const dispatch= useDispatch()
-  const navigate= useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogOut= async()=>{
-    try{
-      axios.post(BASE_URL + "/logout",{},{withCredentials:true})
-      dispatch(removeUser())
-      navigate("/login")
-    }catch(err){
-      console.error(err)
+  const handleLogOut = async () => {
+    try {
+      axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+      dispatch(removeUser());
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
-  useEffect(()=>{handleLogOut()},[])
+  useEffect(() => {
+    handleLogOut();
+  }, []);
   return (
     <>
-      <div className="navbar bg-base-100 py-4" data-theme="dark" >
+      <div className="navbar bg-base-100 py-4" data-theme="dark">
         <div className="flex-1">
-          <Link  to="/"className="btn btn-ghost text-xl">🏔🧠MountainMinds</Link>
+          <Link to="/" className="btn btn-ghost text-xl">
+            <img width={40} height={50} src={MountaunMind} />
+            <span className="  hidden md:block"> MountainMinds</span>
+          </Link>
         </div>
         {user && (
           <div className="flex-none gap-2 mx-10">
@@ -46,18 +57,11 @@ const Navbar = () => {
                 tabIndex={0}
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
-                <li>
-                  <Link to="/profile" className="justify-between">
-                    Profile
-                    <span className="badge">New</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/connections">Connections</Link>
-                </li>
-                <li>
-                  <Link to="/requests">Requests</Link>
-                </li>
+                {navLinks.map((link) => (
+                  <li key={link.path}>
+                    <Link to={link.path}>{link.name}</Link>
+                  </li>
+                ))}
                 <li>
                   <a onClick={handleLogOut}>Logout</a>
                 </li>

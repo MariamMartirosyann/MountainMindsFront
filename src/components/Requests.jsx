@@ -41,7 +41,7 @@ const Requests = () => {
     </div>
 
   return (
-    <div className="text-center my-10 h-full w-1/2 mx-auto ">
+    <div className="text-center my-10 h-full w-[80%] lg:w-1/2 mx-auto ">
       <h1 className="font-bold  text-white text-3xl">Requests</h1>
       {requests.map((request) => {
         const { _id,firstName, lastName, age, gender, photoURL, about } =
@@ -49,7 +49,7 @@ const Requests = () => {
         return (
           <div
             key={_id}
-            className="flex flex-row  m-4 p-4  rounded-lg bg-base-300  justify-between"
+            className="flex flex-col lg:flex-row  m-4 p-4  rounded-lg bg-base-300 items-center  lg:justify-between"
           >
             <div className="">
               {" "}
@@ -59,7 +59,7 @@ const Requests = () => {
                 className="w-20 h-20 rounded-full my-2"
               />
             </div>
-            <div className="text-left m-6 w-[60%]">
+            <div className=" text-center lg:text-left m-6 w-[80%] lg:w-[60%] ">
               {" "}
               <h2 className="font-bold text-xl">
                 {firstName + " " + lastName}
@@ -67,7 +67,7 @@ const Requests = () => {
               {age && gender && <p>{age + ", " + gender}</p>}
               <p className="">{about}</p>
             </div>
-            <div className="flex flex-row justify-end items-center ">
+            <div className="flex flex-row  justify-center lg:justify-end items-center ">
               <button className="btn btn-primary mx-2" onClick={() => reviewRequest("rejected",request._id)}>Reject</button>
               <button className="btn btn-secondary mx-2" onClick={() => reviewRequest("accepted",request._id)}>Accept</button>
             </div>

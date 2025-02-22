@@ -26,7 +26,7 @@ function Body() {
         navigate("/login");
       }
 
-      console.error(err,"login p e");
+      console.error(err);
     }
   };
 
@@ -35,7 +35,7 @@ function Body() {
   }, []);
 
   return (
-    <div data-theme="dark" className="">
+    <div data-theme="dark">
       <Navbar />
       <div className="min-h-[80%]">
       <Outlet />

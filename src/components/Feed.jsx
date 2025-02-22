@@ -19,7 +19,7 @@ function Feed() {
       });
       dispatch(addFeed(res?.data?.data));
     } catch (err) {
-      console.error(err, "feed err");
+      console.error(err);
     }
   };
 
@@ -34,9 +34,9 @@ function Feed() {
       </div>
     );
   return (
-    <div className="flex justify-center my-10 h-screen ">
+    <div className="flex justify-center my-10  ">
       
-      <UserCard user={feed[0]} height={true} />
+      <UserCard user={feed[0]}/>
     </div>
   );
 }

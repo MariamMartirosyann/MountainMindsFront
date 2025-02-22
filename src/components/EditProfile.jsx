@@ -23,7 +23,7 @@ const EditProfile = ({ user }) => {
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
-        { firstName, lastName, age, photoURL, gender, about },
+        { firstName, lastName, age, photoURL, gender, about,skills },
         { withCredentials: true }
       );
       dispatch(addUser(res?.data?.data));
@@ -40,8 +40,8 @@ const EditProfile = ({ user }) => {
 
   return (
     <>
-      <div className="flex justify-center mb-10">
-        <div className="card bg-base-300 w-96 shadow-xl  mx-10">
+      <div className="flex justify-center mb-10 flex-col lg:flex-row items-center lg:items-start">
+        <div className="card bg-base-300 w-96 shadow-xl  mb-5 lg:mb-0 mx-10">
           <div className="card-body">
             <h2 className="card-title justify-center">Edit Profile</h2>
             <div>
@@ -90,7 +90,7 @@ const EditProfile = ({ user }) => {
                 />
               </label>
 
-              {/* <label className="form-control w-full max-w-xs">
+              <label className="form-control w-full max-w-xs">
               <div className="label pt-4">
                 <span className="label-text">Skills</span>
               </div>
@@ -100,7 +100,7 @@ const EditProfile = ({ user }) => {
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setSkills(e.target.value)}
               />
-            </label> */}
+            </label>
 
               <label className="form-control w-full max-w-xs">
                 <div className="label pt-4">
@@ -111,12 +111,10 @@ const EditProfile = ({ user }) => {
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                 >
-                  {/* <option disabled selected>
-                    Male
-                  </option> */}
-                  <option>female</option>
-                  <option>male</option>
-                  <option>other</option>
+            
+                  <option className=" max-w-xs">female</option>
+                  <option className="max-w-xs">male</option>
+                  <option className="max-w-xs">other</option>
                 </select>
               </label>
             
@@ -140,9 +138,14 @@ const EditProfile = ({ user }) => {
             </div>
           </div>
         </div>
+        
         <UserCard
-          user={{ firstName, lastName, age, photoURL, gender, about, skills }}
+          user={{ firstName, lastName, age, photoURL, gender, about, skills } }
+          hideBtns={true}
+          height={true}
+        
         />
+        
       </div>
       {showToast && (
         <div className="toast toast-top toast-center">
