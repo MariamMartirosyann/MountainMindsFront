@@ -6,8 +6,8 @@ import { addFeed } from "../redux/feedSlice";
 import UserCard from "./UserCard";
 
 function Feed() {
-  const feed = useSelector((store) => store.feed);
-  console.log(feed?.lenght,"feed")
+  const feed = useSelector((store) => store?.feed);
+ 
 
   const dispatch = useDispatch();
 

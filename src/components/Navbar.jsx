@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import MountaunMind from "../images/MM.jpeg";
+import MountaunMind from "../images/7.jpeg";
 
 const navLinks = [
   { name: "Profile", path: "/profile" },
@@ -14,7 +14,7 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  const user = useSelector((store) => store.user);
+  const user = useSelector((store) => store?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ const Navbar = () => {
             <span className="  hidden md:block"> MountainMinds</span>
           </Link>
         </div>
-        {user && (
+        {!!user ? (
           <div className="flex-none gap-2 mx-10">
             <p>Welcome {user.firstName}</p>
             <div className="dropdown dropdown-end mx-4 items-center">
@@ -68,7 +68,7 @@ const Navbar = () => {
               </ul>
             </div>
           </div>
-        )}
+        ):null}
       </div>
     </>
   );

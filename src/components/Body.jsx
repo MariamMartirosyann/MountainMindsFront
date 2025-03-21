@@ -37,7 +37,7 @@ function Body() {
   return (
     <div data-theme="dark">
       <Navbar />
-      <div className="min-h-[80%]">
+      <div className="min-h-dvh pb-[10%]">
       <Outlet />
       </div>
       <Footer />

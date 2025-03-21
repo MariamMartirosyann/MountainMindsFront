@@ -32,7 +32,7 @@ const Connections = () => {
     );
 
   return (
-    <div className="text-center my-10 h-full w-[80%] lg:w-1/2 mx-auto">
+    <div className="text-center my-10  w-[80%] lg:w-1/2 mx-auto">
       <h1 className="font-bold  text-white text-3xl">Connections</h1>
       {connections.map((connection) => {
         const { firstName, lastName, age, gender, photoURL, id, about } =

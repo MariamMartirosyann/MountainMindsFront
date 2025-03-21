@@ -6,7 +6,7 @@ import { BASE_URL } from "../utils/constants";
 
 const Requests = () => {
   const dispatch = useDispatch();
-  const requests = useSelector((store) => store.request);
+  const requests = useSelector((store) => store?.request);
  
 
   const fetchRequests = async () => {
