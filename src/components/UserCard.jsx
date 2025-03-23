@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BASE_URL } from "./../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../redux/feedSlice";
@@ -18,10 +18,12 @@ const UserCard = ({ user, height, hideBtns }) => {
         { withCredentials: true }
       );
       dispatch(removeUserFromFeed(userId));
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
+
+
   return (
     <div
       className={

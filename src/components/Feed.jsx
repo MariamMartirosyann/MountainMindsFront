@@ -6,7 +6,7 @@ import { addFeed } from "../redux/feedSlice";
 import UserCard from "./UserCard";
 
 function Feed() {
-  const feed = useSelector((store) => store?.feed);
+  const feed = useSelector((store) => store.feed);
  
 
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ function Feed() {
   return (
     <div className="flex justify-center my-10  ">
       
-      <UserCard user={feed[0]}/>
+      <UserCard user={feed[0]} hideBtns={false} />
     </div>
   );
 }
