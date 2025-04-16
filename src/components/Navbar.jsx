@@ -11,6 +11,7 @@ const navLinks = [
   { name: "Profile", path: "/profile" },
   { name: "Connections", path: "/connections" },
   { name: "Requests", path: "/requests" },
+  { name: "Premium", path: "/premium" },//name.toLowerCase[0]+name.slice(1)
 ];
 
 const Navbar = () => {
