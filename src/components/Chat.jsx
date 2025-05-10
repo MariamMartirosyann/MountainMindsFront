@@ -14,6 +14,7 @@ const Chat = () => {
   const userLastName = user?.lastName;
   const conecctions = useSelector((state) => state?.connection);
 
+  const [isOnline, setIsOnline] = useState(true);
 
   const fetchChatMessages = async () => {
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
@@ -80,7 +81,10 @@ const Chat = () => {
 
   return (
     <div className="w-3/4 m-2 border border-gray-600 mx-auto h-[70vh] flex flex-col">
-      <h1 className="p-5 border-b border-gray-600">Chat</h1>
+      {" "}
+      <h1 className="p-5 border-b border-gray-600">
+        Chat {isOnline && <span className="text-green-500"> (Online)</span>}
+      </h1>
       <div className=" flex-1 overflow-y-scroll px-2">
         {messages?.map((message) => {
           const { firstName, lastName, text } = message;

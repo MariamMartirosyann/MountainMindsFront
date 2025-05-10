@@ -9,6 +9,7 @@ import MountaunMind from "../images/7.jpeg";
 
 const navLinks = [
   { name: "Profile", path: "/profile" },
+  { name: "People", path: "/" },
   { name: "Connections", path: "/connections" },
   { name: "Requests", path: "/requests" },
   { name: "Premium", path: "/premium" },//name.toLowerCase[0]+name.slice(1)
@@ -35,15 +36,15 @@ const Navbar = () => {
   return (
     <>
       <div className="navbar bg-base-100 py-4" data-theme="dark">
-        <div className="flex-1">
-          <Link to="/" className="btn btn-ghost text-xl">
-            <img width={40} height={50} src={MountaunMind} />
-            <span className="  hidden md:block"> MountainMinds</span>
+        <div className="flex-1  text-xs lg:text-xl w-full   lg:w-[1/4]">
+          <Link to={user&&"/"} className={user?"btn btn-ghost justify-start w-full ":"btn btn-ghost justify-between lg:justify-start w-full"}>
+            <img width={30} height={40} src={MountaunMind} />
+            <span className="  "> MountainMinds</span>
           </Link>
         </div>
         {!!user ? (
-          <div className="flex-none gap-2 mx-10">
-            <p>Welcome {user.firstName}</p>
+          <div className="flex-none gap-2 mx-3 lg:mx-10">
+            <p className="hidden md:block">Welcome {user.firstName}</p>
             <div className="dropdown dropdown-end mx-4 items-center">
               <div
                 tabIndex={0}

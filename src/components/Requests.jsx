@@ -37,11 +37,11 @@ const Requests = () => {
 
   if (!requests) return;
   if (requests.length === 0)return <div className="text-center my-10 h-full w-1/2 mx-auto ">
-    <h1 className="font-bold text-2xl text-center my-10 h-full w-2/3 mx-auto">No requests found</h1>;
+    <h1 className="font-bold text-md lg:text-2xl text-center my-10 h-full w-2/3 mx-auto">No requests found</h1>;
     </div>
 
   return (
-    <div className="text-center my-10 h-full w-[80%] lg:w-1/2 mx-auto ">
+    <div className="text-center my-10 w-[80%] lg:w-1/2 mx-auto">
       <h1 className="font-bold  text-white text-3xl">Requests</h1>
       {requests.map((request) => {
         const { _id,firstName, lastName, age, gender, photoURL, about } =
@@ -61,11 +61,11 @@ const Requests = () => {
             </div>
             <div className=" text-center lg:text-left m-6 w-[80%] lg:w-[60%] ">
               {" "}
-              <h2 className="font-bold text-xl">
+              <h2 className="font-bold text-md lg:text-xl">
                 {firstName + " " + lastName}
               </h2>
-              {age && gender && <p>{age + ", " + gender}</p>}
-              <p className="">{about}</p>
+              {age && gender && <p  className=" text-sm lg:text-lg">{age + ", " + gender}</p>}
+              <p c className=" text-sm lg:text-lg">{about}</p>
             </div>
             <div className="flex flex-row  justify-center lg:justify-end items-center ">
               <button className="btn btn-primary mx-2" onClick={() => reviewRequest("rejected",request._id)}>Reject</button>
