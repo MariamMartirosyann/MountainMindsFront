@@ -57,7 +57,7 @@ const Connections = () => {
                 {firstName + " " + lastName}
               </h2>
               {age && gender && <p>{age + ", " + gender}</p>}
-              <p className="">{about}</p>
+              <p className="">{about.slice(0,100)}</p>
              
             </div>
             <Link to={"/chat/"+_id}>

@@ -29,6 +29,9 @@ const Login = () => {
         },
         { withCredentials: true }
       );
+
+      // After successful login/signup
+localStorage.setItem("user", JSON.stringify(res?.data?.data));
       dispatch(addUser(res?.data?.data));
       navigate("/profile");
     } catch (err) {
