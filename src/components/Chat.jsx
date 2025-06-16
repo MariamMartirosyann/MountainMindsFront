@@ -8,18 +8,18 @@ import { BASE_URL } from "../utils/constants";
 const Chat = () => {
   const { targetUserId } = useParams();
   const user = useSelector((state) => state?.user);
-  console.log(user, "user");
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
   const userId = user?._id;
   const userFirstName = user?.firstName;
   const userLastName = user?.lastName;
   const conecctions = useSelector((state) => state?.connection);
 
-
   const fetchChatMessages = async () => {
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
       withCredentials: true,
     });
-    console.log(chat.data.messages, "chat");
+    //console.log(chat.data.messages, "chat");
 
     const chatMessages = chat?.data?.messages?.map((msg) => {
       const { senderId, text } = msg;
@@ -37,7 +37,6 @@ const Chat = () => {
     (connection) => connection?._id === targetUserId
   );
 
-  console.log(targetConnection, "targetConnection");
   const [messages, setMessages] = useState([]);
 
   const [newMessage, setNewMessage] = useState("");
@@ -53,6 +52,20 @@ const Chat = () => {
     });
     setNewMessage("");
   };
+
+  useEffect(() => {
+    const socket = createSocketConnection();
+
+    socket.emit("userConnected", userId);
+
+    socket.on("onlineUsers", (users) => {
+      setOnlineUsers(users);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userId]);
 
   useEffect(() => {
     if (!userId || !targetUserId) return;
@@ -84,7 +97,7 @@ const Chat = () => {
       <div className=" flex-1 overflow-y-scroll px-2">
         {messages?.map((message) => {
           const { firstName, lastName, text } = message;
-          console.log(message, "ms");
+
           return (
             <div
               className={
@@ -95,7 +108,7 @@ const Chat = () => {
               key={firstName + Date.now() * Math.random()}
             >
               <div className="chat-image avatar">
-                <div className="w-10 rounded-full">
+                <div className="w-10 rounded-full relative">
                   <img
                     alt="Tailwind CSS chat bubble component"
                     src={
@@ -104,6 +117,10 @@ const Chat = () => {
                         : targetConnection?.photoURL
                     }
                   />
+
+                  {onlineUsers.includes(targetUserId) && (
+                    <span className="absolute bottom-1 right-1 block w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                  )}
                 </div>
               </div>
               <div className="chat-header">

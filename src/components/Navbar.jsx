@@ -39,6 +39,7 @@ const Navbar = () => {
       console.error(err);
     }
   };
+  
 
   return (
     <>
