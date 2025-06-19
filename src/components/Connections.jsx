@@ -58,7 +58,7 @@ const user = useSelector((state) => state?.user);
 
   return (
     <div className="text-center my-10  w-[80%] lg:w-1/2 mx-auto">
-      <h1 className="font-bold  text-white text-3xl">Connections</h1>
+      <h1 className="font-bold  text-white  text-lg lg:text-3xl">Connections</h1>
 
       
       {connections.map((connection) => {
@@ -79,13 +79,13 @@ const user = useSelector((state) => state?.user);
             </div>
             <div className=" text-center lg:text-left m-6  w-[85%] lg:w-[70%] ">
               {" "}
-              <h2 className="font-bold text-xl">
+              <h2 className="font-bold text-md lg:text-xl">
                 {firstName + " " + lastName}
               </h2>
-              {age && gender && <p>{age + ", " + gender}</p>}
-              <p className="">{about.slice(0, 100)}</p>
+              {age && gender && <p className=" text-sm lg:text-lg">{age + ", " + gender}</p>}
+              <p className=" text-sm lg:text-lg">{about.slice(0, 100)}</p>
             </div>
-            <Link to={"/chat/" + _id} className="w-1/3 lg:w-1/6">
+            <Link to={"/chat/" + _id} className="w-[60%] lg:w-1/6">
               <button className="btn w-full btn-primary  mt-0 lg:mt-4 mr-8">Chat</button>
             </Link>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
@@ -15,11 +15,17 @@ const Chat = () => {
   const userLastName = user?.lastName;
   const conecctions = useSelector((state) => state?.connection);
 
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [loadMessages, setLoadMessages] = useState(7);
+
+  const messagesEndRef = useRef(null);
+  const chatBoxRef = useRef(null);
+
   const fetchChatMessages = async () => {
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
       withCredentials: true,
     });
-    //console.log(chat.data.messages, "chat");
 
     const chatMessages = chat?.data?.messages?.map((msg) => {
       const { senderId, text } = msg;
@@ -37,9 +43,11 @@ const Chat = () => {
     (connection) => connection?._id === targetUserId
   );
 
-  const [messages, setMessages] = useState([]);
-
-  const [newMessage, setNewMessage] = useState("");
+  const handleScroll = (e) => {
+    if (e.target.scrollTop === 0 && loadMessages < messages.length) {
+      setLoadMessages((prev) => Math.min(prev + 10, messages.length));
+    }
+  };
 
   const sendMessage = () => {
     const socket = createSocketConnection();
@@ -80,24 +88,46 @@ const Chat = () => {
 
     socket.on("messageReceived", ({ firstName, lastName, text }) => {
       setMessages((messages) => [...messages, { firstName, lastName, text }]);
+      setLoadMessages((prev) => Math.min(prev + 1, messages.length + 1));
+      // Scroll to bottom on new message
+      setTimeout(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
     });
 
     return () => {
       socket.disconnect();
     };
+    // eslint-disable-next-line
   }, [userId, targetUserId]);
 
   useEffect(() => {
     fetchChatMessages();
   }, []);
 
-  return (
-    <div className="w-3/4 m-2 border border-gray-600 mx-auto h-[70vh] flex flex-col">
-      <h1 className="p-5 border-b border-gray-600">Chat</h1>
-      <div className=" flex-1 overflow-y-scroll px-2">
-        {messages?.map((message) => {
-          const { firstName, lastName, text } = message;
+  // Scroll to bottom on initial load
+  useEffect(() => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  }, [messages.length]);
 
+  // Calculate which messages to show
+  const startIdx = Math.max(messages.length - loadMessages, 0);
+  const visibleMessages = messages.slice(startIdx);
+
+  return (
+    <div className="w-3/4 lg:w-1/2 m-2 border border-gray-600 mx-auto h-[70vh] flex flex-col">
+      <h1 className="p-5 border-b border-gray-600">Chat</h1>
+      <div
+        className="flex-1 overflow-y-scroll px-2"
+        ref={chatBoxRef}
+        onScroll={handleScroll}
+      >
+        {visibleMessages.map((message, idx) => {
+          const { firstName, lastName, text } = message;
           return (
             <div
               className={
@@ -105,7 +135,7 @@ const Chat = () => {
                   ? "chat chat-start "
                   : "chat chat-end"
               }
-              key={firstName + Date.now() * Math.random()}
+              key={firstName + idx + text}
             >
               <div className="chat-image avatar">
                 <div className="w-10 rounded-full relative">
@@ -117,7 +147,6 @@ const Chat = () => {
                         : targetConnection?.photoURL
                     }
                   />
-
                   {onlineUsers.includes(targetUserId) && (
                     <span className="absolute bottom-1 right-1 block w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                   )}
@@ -134,6 +163,7 @@ const Chat = () => {
             </div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
       <div className=" p-5 border-t border-gray-600  gap-2 flex flex-col md:flex-row">
         <input

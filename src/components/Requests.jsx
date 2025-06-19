@@ -41,8 +41,8 @@ const Requests = () => {
     </div>
 
   return (
-    <div className="text-center my-10 h-full w-[80%] lg:w-1/2 mx-auto ">
-      <h1 className="font-bold  text-white text-3xl">Requests</h1>
+    <div className="text-center my-10  w-[80%] lg:w-1/2 mx-auto">
+      <h1 className="font-bold  text-white  text-lg lg:text-3xl">Requests</h1>
       {requests.map((request) => {
         const { _id,firstName, lastName, age, gender, photoURL, about } =
           request.fromUserId;
@@ -59,17 +59,17 @@ const Requests = () => {
                 className="w-20 h-20 rounded-full my-2"
               />
             </div>
-            <div className=" text-center lg:text-left m-6 w-[80%] lg:w-[60%] ">
+            <div className=" text-center lg:text-left m-6 w-[80%] lg:w-[50%] ">
               {" "}
-              <h2 className="font-bold text-xl">
+              <h2 className="font-bold text-md lg:text-xl">
                 {firstName + " " + lastName}
               </h2>
               {age && gender && <p>{age + ", " + gender}</p>}
-              <p className="">{about}</p>
+              <p className="text-sm lg:text-lg">{about}</p>
             </div>
-            <div className="flex flex-row  justify-center lg:justify-end items-center ">
-              <button className="btn btn-primary mx-2" onClick={() => reviewRequest("rejected",request._id)}>Reject</button>
-              <button className="btn btn-secondary mx-2" onClick={() => reviewRequest("accepted",request._id)}>Accept</button>
+            <div className="flex flex-col lg:flex-row  justify-center lg:justify-end items-center w-[80%] lg:w-[25%] ">
+              <button className="btn btn-primary w-2/3 lg:w-1/2  my-2 lg:my-0 mx-2 " onClick={() => reviewRequest("rejected",request._id)}>Reject</button>
+              <button className="btn btn-secondary w-2/3 lg:w-1/2 my-2 lg:my-0  mx-2" onClick={() => reviewRequest("accepted",request._id)}>Accept</button>
             </div>
           </div>
         );
