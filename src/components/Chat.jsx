@@ -8,19 +8,22 @@ import { BASE_URL } from "../utils/constants";
 const Chat = () => {
   const { targetUserId } = useParams();
   const user = useSelector((state) => state?.user);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const conecctions = useSelector((state) => state?.connection);
 
   const userId = user?._id;
   const userFirstName = user?.firstName;
   const userLastName = user?.lastName;
-  const conecctions = useSelector((state) => state?.connection);
 
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loadMessages, setLoadMessages] = useState(7);
+  const [isTyping, setIsTyping] = useState(false);
 
   const messagesEndRef = useRef(null);
   const chatBoxRef = useRef(null);
+  const socket = useRef(null);
+  const typingTimeout = useRef(null);
 
   const fetchChatMessages = async () => {
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
@@ -40,7 +43,7 @@ const Chat = () => {
   };
 
   const targetConnection = conecctions?.find(
-    (connection) => connection?._id === targetUserId
+    (connection) => connection?._id == targetUserId
   );
 
   const handleScroll = (e) => {
@@ -50,46 +53,70 @@ const Chat = () => {
   };
 
   const sendMessage = () => {
-    const socket = createSocketConnection();
-    socket.emit("sendMessage", {
-      firstName: user?.firstName,
-      lastName: user?.lastName,
+    if (!socket.current) return;
+
+    socket.current.emit("sendMessage", {
+      firstName: userFirstName,
+      lastName: userLastName,
       userId,
       targetUserId,
       text: newMessage,
     });
+
     setNewMessage("");
   };
 
+  const handleInputChange = (e) => {
+    setNewMessage(e.target.value);
+
+    if (!socket.current) return;
+
+    socket.current.emit("typing", {
+      firstName: userFirstName,
+      lastName: userLastName,
+      userId,
+      targetUserId,
+    });
+
+    if (typingTimeout.current) clearTimeout(typingTimeout.current);
+
+    typingTimeout.current = setTimeout(() => {
+      socket.current.emit("stopTyping", {
+        firstName: userFirstName,
+        lastName: userLastName,
+        userId,
+        targetUserId,
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
-    const socket = createSocketConnection();
+    socket.current = createSocketConnection();
 
-    socket.emit("userConnected", userId);
+    socket.current.emit("userConnected", userId);
 
-    socket.on("onlineUsers", (users) => {
+    socket.current.on("onlineUsers", (users) => {
       setOnlineUsers(users);
     });
 
     return () => {
-      socket.disconnect();
+      socket.current.disconnect();
     };
   }, [userId]);
 
   useEffect(() => {
     if (!userId || !targetUserId) return;
 
-    const socket = createSocketConnection();
-    socket.emit("joinChat", {
+    socket.current.emit("joinChat", {
       userId,
       targetUserId,
-      firstName: user?.firstName,
-      lastName: user?.lastName,
+      firstName: userFirstName,
+      lastName: userLastName,
     });
 
-    socket.on("messageReceived", ({ firstName, lastName, text }) => {
+    socket.current.on("messageReceived", ({ firstName, lastName, text }) => {
       setMessages((messages) => [...messages, { firstName, lastName, text }]);
       setLoadMessages((prev) => Math.min(prev + 1, messages.length + 1));
-      // Scroll to bottom on new message
       setTimeout(() => {
         if (messagesEndRef.current) {
           messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -97,24 +124,31 @@ const Chat = () => {
       }, 100);
     });
 
+    socket.current.on("typing", ({ userId: typingUserId }) => {
+      if (typingUserId === targetUserId) setIsTyping(true);
+    });
+
+    socket.current.on("stopTyping", ({ userId: typingUserId }) => {
+      if (typingUserId === targetUserId) setIsTyping(false);
+    });
+
     return () => {
-      socket.disconnect();
+      socket.current.disconnect();
     };
-    // eslint-disable-next-line
   }, [userId, targetUserId]);
 
   useEffect(() => {
     fetchChatMessages();
   }, []);
 
-  // Scroll to bottom on initial load
   useEffect(() => {
     if (chatBoxRef.current) {
       chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
   }, [messages.length]);
 
-  // Calculate which messages to show
+
+
   const startIdx = Math.max(messages.length - loadMessages, 0);
   const visibleMessages = messages.slice(startIdx);
 
@@ -140,7 +174,7 @@ const Chat = () => {
               <div className="chat-image avatar">
                 <div className="w-10 rounded-full relative">
                   <img
-                    alt="Tailwind CSS chat bubble component"
+                    alt="Chat avatar"
                     src={
                       firstName === userFirstName
                         ? user?.photoURL
@@ -163,14 +197,21 @@ const Chat = () => {
             </div>
           );
         })}
+        
         <div ref={messagesEndRef} />
       </div>
-      <div className=" p-5 border-t border-gray-600  gap-2 flex flex-col md:flex-row">
+      <div className="p-5 border-t border-gray-600 gap-2 flex flex-col md:flex-row">
+        {isTyping && (
+          <div className="text-sm italic text-gray-400 mb-2 px-2">
+            {targetConnection?.firstName} is typing...
+          </div>
+        )}
         <input
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className=" flex-1 border border-gray-500 text-white rounded p-2"
+          onChange={handleInputChange}
+          className="flex-1 border border-gray-500 text-white rounded p-2"
           type="text"
+          text={isTyping? targetConnection?.firstName+ " is typing...": " Type a message..."}
         />
         <button className="btn btn-secondary" onClick={sendMessage}>
           Send
