@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import  { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
@@ -30,12 +30,16 @@ const Chat = () => {
       withCredentials: true,
     });
 
+
+    
     const chatMessages = chat?.data?.messages?.map((msg) => {
-      const { senderId, text } = msg;
+     
+      const { senderId, text, createdAt } = msg;
       return {
         firstName: senderId?.firstName,
         lastName: senderId?.lastName,
         text,
+        createdAt: createdAt,
       };
     });
 
@@ -43,8 +47,9 @@ const Chat = () => {
   };
 
   const targetConnection = conecctions?.find(
-    (connection) => connection?._id == targetUserId
+    (connection) => connection?._id === targetUserId
   );
+  console.log("targetConnection", targetConnection);
 
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0 && loadMessages < messages.length) {
@@ -54,6 +59,7 @@ const Chat = () => {
 
   const sendMessage = () => {
     if (!socket.current) return;
+ 
 
     socket.current.emit("sendMessage", {
       firstName: userFirstName,
@@ -61,6 +67,10 @@ const Chat = () => {
       userId,
       targetUserId,
       text: newMessage,
+      createdAt: new Date().toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }),
     });
 
     setNewMessage("");
@@ -114,15 +124,22 @@ const Chat = () => {
       lastName: userLastName,
     });
 
-    socket.current.on("messageReceived", ({ firstName, lastName, text }) => {
-      setMessages((messages) => [...messages, { firstName, lastName, text }]);
-      setLoadMessages((prev) => Math.min(prev + 1, messages.length + 1));
-      setTimeout(() => {
-        if (messagesEndRef.current) {
-          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 100);
-    });
+    socket.current.on(
+      "messageReceived",
+      ({ firstName, lastName, text, createdAt }) => {
+        setMessages((messages) => [
+          ...messages,
+          { firstName, lastName, text, createdAt },
+        ]);
+
+        setLoadMessages((prev) => Math.min(prev + 1, messages.length + 1));
+        setTimeout(() => {
+          if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+      }
+    );
 
     socket.current.on("typing", ({ userId: typingUserId }) => {
       if (typingUserId === targetUserId) setIsTyping(true);
@@ -147,8 +164,6 @@ const Chat = () => {
     }
   }, [messages.length]);
 
-
-
   const startIdx = Math.max(messages.length - loadMessages, 0);
   const visibleMessages = messages.slice(startIdx);
 
@@ -161,7 +176,7 @@ const Chat = () => {
         onScroll={handleScroll}
       >
         {visibleMessages.map((message, idx) => {
-          const { firstName, lastName, text } = message;
+          const { firstName, lastName, text, createdAt } = message;
           return (
             <div
               className={
@@ -186,32 +201,61 @@ const Chat = () => {
                   )}
                 </div>
               </div>
+
               <div className="chat-header">
                 {firstName + " " + lastName}
-                <time className="text-xs opacity-50">
-                  {new Date().toString().slice(15, 21)}
+                <time className="text-xs opacity-50 ml-2">
+                  {createdAt
+                    ? (() => {
+                        const dateObj = new Date(createdAt);
+                        const now = new Date();
+                        const isToday =
+                          dateObj.getDate() === now.getDate() &&
+                          dateObj.getMonth() === now.getMonth() &&
+                          dateObj.getFullYear() === now.getFullYear();
+                        if (isToday) {
+                          // Show only time if today
+                          return dateObj.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          });
+                        } else {
+                          // Show date and time if not today
+                          return (
+                            dateObj.toLocaleDateString([], {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }) +
+                            " " +
+                            dateObj.toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
+                          );
+                        }
+                      })()
+                    : ""}
                 </time>
               </div>
+
               <div className="chat-bubble">{text}</div>
               <div className="chat-footer opacity-50">Delivered</div>
             </div>
           );
         })}
-        
+
         <div ref={messagesEndRef} />
       </div>
       <div className="p-5 border-t border-gray-600 gap-2 flex flex-col md:flex-row">
-        {isTyping && (
-          <div className="text-sm italic text-gray-400 mb-2 px-2">
-            {targetConnection?.firstName} is typing...
-          </div>
-        )}
+       
         <input
           value={newMessage}
           onChange={handleInputChange}
           className="flex-1 border border-gray-500 text-white rounded p-2"
           type="text"
-          text={isTyping? targetConnection?.firstName+ " is typing...": " Type a message..."}
+          placeholder={isTyping? targetConnection?.firstName + " is typing...": " Type a message..."}
+         
         />
         <button className="btn btn-secondary" onClick={sendMessage}>
           Send
