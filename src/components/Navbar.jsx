@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
@@ -50,7 +50,7 @@ const Navbar = () => {
             <img width={30} height={40} src={MountaunMind} />
             <span className="  "> MountainMinds</span>
           </Link>
-          <div className="m-2">{user&&<GoBack/>}</div>
+          
         </div>
         {!!user ? (
           <div className="flex-none gap-2 mx-3 lg:mx-10">

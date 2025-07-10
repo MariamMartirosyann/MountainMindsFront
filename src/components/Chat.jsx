@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import GoBack from "./GoBack";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -168,7 +169,10 @@ const Chat = () => {
   const visibleMessages = messages.slice(startIdx);
 
   return (
+    <>
+    <div className="ml-3">{user&&<GoBack/>}</div>
     <div className="w-3/4 lg:w-1/2 m-2 border border-gray-600 mx-auto h-[70vh] flex flex-col">
+      
       <h1 className="p-5 border-b border-gray-600">Chat</h1>
       <div
         className="flex-1 overflow-y-scroll px-2"
@@ -262,6 +266,7 @@ const Chat = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 
