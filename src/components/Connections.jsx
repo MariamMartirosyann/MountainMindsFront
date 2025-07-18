@@ -66,7 +66,7 @@ const user = useSelector((state) => state?.user);
           connection;
         return (
           <div
-            key={photoURL}
+            key={_id}
             className="flex  flex-col lg:flex-row  m-4 p-4  rounded-lg bg-base-300 items-center  "
           >
             <div className="relative">

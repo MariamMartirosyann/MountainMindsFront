@@ -50,7 +50,7 @@ const Chat = () => {
   const targetConnection = conecctions?.find(
     (connection) => connection?._id === targetUserId
   );
-  console.log("targetConnection", targetConnection);
+  
 
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0 && loadMessages < messages.length) {

@@ -6,7 +6,6 @@ import { BASE_URL } from "../utils/constants";
 import { removeUser, addUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import MountaunMind from "../images/7.jpeg";
-import GoBack from "./GoBack";
 
 const navLinks = [
   { name: "Profile", path: "/profile" },
