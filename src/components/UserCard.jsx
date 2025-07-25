@@ -39,7 +39,7 @@ const UserCard = ({ user, height, hideBtns }) => {
         <h2 className="card-title">{firstName + "  " + lastName}</h2>
         <p>{age && gender && age + ", " + gender}</p>
         <p>{skills}</p>
-        <p>{about}</p>
+        <p className="text-[11px] md:text-[15px]" >{about}</p>
 
         {!hideBtns ? (
           <div className="card-actions justify-center mt-4">

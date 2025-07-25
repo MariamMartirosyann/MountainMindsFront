@@ -17,6 +17,7 @@ const Requests = () => {
         withCredentials: true,
       });
       dispatch(addRequests(response?.data?.data));
+      console.log("Requests fetched:", response?.data?.data?.reverse());
     } catch (error) {
       console.log(error);
     }
@@ -106,17 +107,17 @@ const Requests = () => {
                 {firstName + " " + lastName}
               </h2>
               {age && gender && <p>{age + ", " + gender}</p>}
-              <p className="text-sm lg:text-lg">{about}</p>
+              <p className="  hidden md:block text-sm lg:text-lg">{about}</p>
             </div>
             <div className="flex flex-col lg:flex-row  justify-center lg:justify-end items-center w-[80%] lg:w-[25%] ">
               <button
-                className="btn btn-primary w-2/3 lg:w-1/2  my-2 lg:my-0 mx-2 "
+                className="btn btn-primary w-full lg:w-1/2  my-2 lg:my-0 mx-2 "
                 onClick={() => reviewRequest("rejected", request._id)}
               >
                 Reject
               </button>
               <button
-                className="btn btn-secondary w-2/3 lg:w-1/2 my-2 lg:my-0  mx-2"
+                className="btn btn-secondary w-full lg:w-1/2 my-2 lg:my-0  mx-2"
                 onClick={() => reviewRequest("accepted", request._id)}
               >
                 Accept

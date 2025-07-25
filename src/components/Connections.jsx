@@ -98,7 +98,7 @@ const Connections = () => {
                 {firstName + " " + lastName}
               </h2>
               {age && gender && <p className=" text-sm lg:text-lg">{age + ", " + gender}</p>}
-              <p className=" text-sm lg:text-lg">{about.slice(0, 100)}</p>
+              <p className="  hidden md:block text-sm lg:text-lg">{about.slice(0, 100)}</p>
             </div>
             <Link to={"/chat/" + _id} className="w-[60%] lg:w-1/6">
               <button className="btn w-full btn-primary  mt-0 lg:mt-4 mr-8">Chat</button>
